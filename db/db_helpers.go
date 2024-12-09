@@ -49,7 +49,7 @@ type Transaction struct {
 }
 
 // InitializeDB initializes the database connection
-func InitializeDB(dataSourceName string) {
+func InitializeDB(dataSourceName string) *sql.DB {
 	var err error
 
 	err = services.RetryOperation(func() error {
@@ -66,6 +66,8 @@ func InitializeDB(dataSourceName string) {
 	}
 
 	log.Println("Successfully connected to the database.")
+
+	return db
 }
 
 func CreateUser(db *sql.DB, user User) error {
