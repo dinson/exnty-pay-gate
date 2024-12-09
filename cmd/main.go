@@ -29,5 +29,4 @@ func main() {
 	if err := http.ListenAndServe(":8080", router); err != nil {
 		log.Fatalf("Could not start server: %s\n", err)
 	}
-
 }
