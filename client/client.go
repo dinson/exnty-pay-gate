@@ -1,17 +1,12 @@
 package client
 
 import (
-	"database/sql"
 	"payment-gateway/config"
 	"payment-gateway/db"
 )
 
 type clients struct {
-	Database *database
-}
-
-type database struct {
-	Client *sql.DB
+	DB db.DB
 }
 
 var (
@@ -33,9 +28,6 @@ func initPostgresQLClient() {
 		":" + config.Get().Database.Port +
 		"/" + config.Get().Database.DBName +
 		"?sslmode=disable"
-	dbClient := db.InitializeDB(dbURL)
 
-	client.Database = &database{
-		Client: dbClient,
-	}
+	client.DB = db.Initialize(dbURL)
 }

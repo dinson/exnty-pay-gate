@@ -14,8 +14,6 @@ func init() {
 }
 
 func main() {
-	// Initialize the database connection
-
 	// Set up the HTTP server and routes
 	router := api.SetupRouter()
 
