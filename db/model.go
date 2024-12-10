@@ -38,6 +38,7 @@ type Transaction struct {
 	GatewayID int
 	CountryID int
 	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 type GatewayPriorityConfig struct {

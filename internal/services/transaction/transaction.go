@@ -9,6 +9,7 @@ import (
 
 type Transaction interface {
 	Deposit(ctx context.Context, req *contract.DepositRequest) (*contract.DepositResponse, error)
+	UpdateStatus(ctx context.Context, req *contract.UpdateStatusRequest) error
 }
 
 type impl struct {
