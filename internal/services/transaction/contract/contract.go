@@ -1,5 +1,9 @@
 package contract
 
+import (
+	"payment-gateway/enum"
+)
+
 type DepositRequest struct {
 	UserID    int
 	Amount    float64
@@ -11,4 +15,9 @@ type DepositRequest struct {
 type DepositResponse struct {
 	TransactionID int
 	Success       bool
+}
+
+type UpdateStatusRequest struct {
+	TransactionID int
+	Status        enum.TxnStatus
 }

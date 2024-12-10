@@ -17,6 +17,8 @@ type DB interface {
 	GetCountries(ctx context.Context) ([]Country, error)
 	CreateTransaction(ctx context.Context, transaction *Transaction) (int, error)
 	GetTransactions(ctx context.Context) ([]Transaction, error)
+	GetTransactionByID(ctx context.Context, id int) (*Transaction, error)
+	UpdateTransactionByID(ctx context.Context, id int, transaction *Transaction) error
 	GetSupportedCountriesByGateway(ctx context.Context, gatewayID int) ([]Country, error)
 	ListCountryGatewaysByPriority(ctx context.Context, countryID int) ([]*GatewaysForCountry, error)
 }
