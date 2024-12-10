@@ -15,9 +15,10 @@ type DB interface {
 	GetGateways(ctx context.Context) ([]Gateway, error)
 	CreateCountry(ctx context.Context, country Country) error
 	GetCountries(ctx context.Context) ([]Country, error)
-	CreateTransaction(ctx context.Context, transaction Transaction) error
+	CreateTransaction(ctx context.Context, transaction *Transaction) (int, error)
 	GetTransactions(ctx context.Context) ([]Transaction, error)
 	GetSupportedCountriesByGateway(ctx context.Context, gatewayID int) ([]Country, error)
+	ListCountryGatewaysByPriority(ctx context.Context, countryID int) ([]*GatewaysForCountry, error)
 }
 
 type impl struct {
