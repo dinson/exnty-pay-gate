@@ -10,6 +10,7 @@ import (
 type Transaction interface {
 	Deposit(ctx context.Context, req *contract.DepositRequest) (*contract.DepositResponse, error)
 	UpdateStatus(ctx context.Context, req *contract.UpdateStatusRequest) error
+	Withdraw(ctx context.Context, req *contract.WithdrawRequest) (*contract.WithdrawResponse, error)
 }
 
 type impl struct {
