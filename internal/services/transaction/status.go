@@ -9,7 +9,7 @@ import (
 
 func (i impl) UpdateStatus(ctx context.Context, req *contract.UpdateStatusRequest) error {
 	txn, err := i.db.GetTransactionByID(ctx, req.TransactionID)
-	if err != nil {
+	if err != nil || txn == nil {
 		errMsg := fmt.Errorf("failed to retrieve txn by id: %d err: %v", req.TransactionID, err)
 		log.Println(errMsg)
 		return errMsg
