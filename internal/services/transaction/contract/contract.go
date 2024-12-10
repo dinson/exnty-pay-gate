@@ -21,3 +21,16 @@ type UpdateStatusRequest struct {
 	TransactionID int
 	Status        enum.TxnStatus
 }
+
+type WithdrawRequest struct {
+	UserID    int
+	Amount    float64
+	Currency  string
+	GatewayID int
+	CountryID int
+}
+
+type WithdrawResponse struct {
+	TransactionID int
+	Success       bool
+}
