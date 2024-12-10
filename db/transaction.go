@@ -6,15 +6,15 @@ import (
 	"time"
 )
 
-func (i impl) CreateTransaction(ctx context.Context, transaction Transaction) error {
+func (i impl) CreateTransaction(ctx context.Context, transaction *Transaction) (int, error) {
 	query := `INSERT INTO transactions (amount, type, status, gateway_id, country_id, user_id, created_at) 
 			  VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id`
 
-	err := i.db.QueryRow(query, transaction.Amount, transaction.Type, transaction.Status, transaction.GatewayID, transaction.CountryID, transaction.UserID, time.Now()).Scan(&transaction.ID)
+	err := i.db.QueryRowContext(ctx, query, transaction.Amount, transaction.Type, transaction.Status, transaction.GatewayID, transaction.CountryID, transaction.UserID, time.Now()).Scan(&transaction.ID)
 	if err != nil {
-		return fmt.Errorf("failed to insert transaction: %v", err)
+		return 0, fmt.Errorf("failed to insert transaction: %v", err)
 	}
-	return nil
+	return transaction.ID, nil
 }
 
 func (i impl) GetTransactions(ctx context.Context) ([]Transaction, error) {

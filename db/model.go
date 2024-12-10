@@ -32,10 +32,24 @@ type Country struct {
 type Transaction struct {
 	ID        int
 	Amount    float64
-	Type      string
-	Status    string
+	Type      string // deposit or withdrawal
+	Status    string // success, failed, cancelled, initialized
 	UserID    int
 	GatewayID int
 	CountryID int
 	CreatedAt time.Time
+}
+
+type GatewayPriorityConfig struct {
+	ID        int
+	GatewayID int
+	CountryID int
+	Priority  int // 1,2,3 and so on, lowest value means highest priority
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
+
+type GatewaysForCountry struct {
+	ID   int
+	Name string
 }

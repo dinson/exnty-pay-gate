@@ -18,10 +18,10 @@ func Get() *clients {
 }
 
 func Init() {
-	initPostgresQLClient()
+	initPostgreSQLClient()
 }
 
-func initPostgresQLClient() {
+func initPostgreSQLClient() {
 	dbURL := "postgres://" + config.Get().Database.Username +
 		":" + config.Get().Database.Password +
 		"@" + config.Get().Database.Host +

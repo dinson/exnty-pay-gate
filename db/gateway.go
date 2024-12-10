@@ -37,3 +37,28 @@ func (i impl) GetGateways(ctx context.Context) ([]Gateway, error) {
 	}
 	return gateways, nil
 }
+
+func (i impl) ListCountryGatewaysByPriority(ctx context.Context, countryID int) ([]*GatewaysForCountry, error) {
+	query := `SELECT * FROM gateway_priority where country_id = $1 ORDER BY priority`
+
+	rows, err := i.db.QueryContext(ctx, query, countryID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to fetch gateways for country %d: %v", countryID, err)
+	}
+	defer rows.Close()
+
+	var gateways []*GatewaysForCountry
+	for rows.Next() {
+		var gateway GatewaysForCountry
+		if err := rows.Scan(&gateway.ID, &gateway.Name); err != nil {
+			return nil, fmt.Errorf("failed to scan gateway_priority: %v for country: %d", err, countryID)
+		}
+		gateways = append(gateways, &gateway)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, fmt.Errorf("failed to iterate over rows: %v for country: %d", err, countryID)
+	}
+
+	return gateways, nil
+}
