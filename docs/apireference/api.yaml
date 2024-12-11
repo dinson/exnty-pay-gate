@@ -1,0 +1,220 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Exinity - Payment Gateway Service
+  license:
+    name: MIT
+servers:
+  - url: http://localhost:8080
+paths:
+  /deposit:
+    post:
+      summary: Deposit transaction
+      operationId: opDeposit
+      tags:
+        - Deposit
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DepositRequest'
+      responses:
+        200:
+          description: Success deposit operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DepositResponse"
+  /withdrawal:
+    post:
+      summary: Withdraw transaction
+      operationId: opWithdraw
+      tags:
+        - Withdrawal
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WithdrawalRequest'
+      responses:
+        200:
+          description: Success withdrawal operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WithdrawResponse"
+  /public/callback/deposit/success:
+    post:
+      summary: Success callback for deposit operation
+      operationId: opPublicCallbackDepositSuccess
+      tags:
+        - Deposit
+        - Callback
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CallbackDepositSuccessRequest'
+      responses:
+        200:
+          description: successful callback
+  /public/callback/deposit/failure:
+    post:
+      summary: Failure callback for deposit operation
+      operationId: opPublicCallbackDepositFailure
+      tags:
+        - Deposit
+        - Callback
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CallbackDepositFailureRequest'
+      responses:
+        200:
+          description: successful callback
+  /public/callback/withdrawal/success:
+    post:
+      summary: Success callback for withdrawal operation
+      operationId: opPublicCallbackWithdrawalSuccess
+      tags:
+        - Withdrawal
+        - Callback
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CallbackWithdrawalSuccessRequest'
+      responses:
+        200:
+          description: successful callback
+  /public/callback/withdrawal/failure:
+    post:
+      summary: Failure callback for withdrawal operation
+      operationId: opPublicCallbackWithdrawalFailure
+      tags:
+        - Withdrawal
+        - Callback
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CallbackWithdrawalFailureRequest'
+      responses:
+        200:
+          description: successful callback
+components:
+  schemas:
+    DepositRequest:
+      required:
+        - amount
+        - currency
+      properties:
+        amount:
+          type: integer
+          format: int
+        currency:
+          type: string
+    WithdrawalRequest:
+      required:
+        - amount
+        - currency
+      properties:
+        amount:
+          type: integer
+          format: int
+        currency:
+          type: string
+    DepositResponse:
+      required:
+        - status_code
+      properties:
+        status_code:
+          type: integer
+          format: int
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            success:
+              type: boolean
+              description: Status of operation
+            gateway:
+              type: string
+              description: Name of the payment gateway used
+            transaction_id:
+              type: integer
+              description: ID of the transaction
+    WithdrawResponse:
+      required:
+        - status_code
+      properties:
+        status_code:
+          type: integer
+          format: int
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            success:
+              type: boolean
+              description: Status of operation
+    CallbackDepositSuccessRequest:
+      required:
+        - transaction_id
+      properties:
+        transaction_id:
+          type: integer
+          format: int
+    CallbackDepositFailureRequest:
+      required:
+        - transaction_id
+      properties:
+        transaction_id:
+          type: integer
+          format: int
+        reason:
+          type: string
+          format: string
+    CallbackWithdrawalSuccessRequest:
+      required:
+        - transaction_id
+      properties:
+        transaction_id:
+          type: integer
+          format: int
+    CallbackWithdrawalFailureRequest:
+      required:
+        - transaction_id
+      properties:
+        transaction_id:
+          type: integer
+          format: int
+        reason:
+          type: string
+          format: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

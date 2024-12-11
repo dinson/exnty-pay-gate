@@ -48,9 +48,7 @@ func (h Handler) InitDeposit(w http.ResponseWriter, r *http.Request) {
 	}
 
 	respData := &dto.InitDepositResponse{
-		Success:  false,
-		Currency: req.Currency,
-		UserID:   userID,
+		Success: false, // default
 	}
 	respStatusCode := http.StatusInternalServerError // default
 
