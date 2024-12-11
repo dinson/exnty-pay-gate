@@ -7,13 +7,19 @@ import (
 	"payment-gateway/db"
 	"payment-gateway/enum"
 	"payment-gateway/internal/services/transaction/contract"
+	ppContract "payment-gateway/paymentprovider/contract"
 	"time"
 )
 
 func (i impl) Withdraw(ctx context.Context, req *contract.WithdrawRequest) (*contract.WithdrawResponse, error) {
-	// TODO: create gateway providers package and call here to initiate withdrawal
-
-	// TODO: implement exponential back-off
+	// call payment gateway provider to make withdrawal
+	if err := i.paymentProvider.Withdraw(ctx, &ppContract.WithdrawRequest{}); err != nil {
+		log.Println(fmt.Sprintf("error from payment provider: %v userID: %d provider: %s", err, req.UserID, req.GatewayProvider))
+		return &contract.WithdrawResponse{
+			TransactionID: 0,
+			Success:       false,
+		}, nil
+	}
 
 	// save to transaction table
 	txnModel := &db.Transaction{

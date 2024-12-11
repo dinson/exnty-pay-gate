@@ -1,6 +1,7 @@
 package config
 
 import (
+	"log"
 	"os"
 )
 
@@ -25,6 +26,8 @@ func Get() *configuration {
 }
 
 func Load() {
+	log.Println("loading configuration values...")
+
 	c := &configuration{
 		Database: &database{
 			Username: os.Getenv("DB_USER"),
@@ -36,4 +39,6 @@ func Load() {
 	}
 
 	config = c
+
+	log.Println("configuration loaded!")
 }

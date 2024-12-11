@@ -5,11 +5,12 @@ import (
 )
 
 type DepositRequest struct {
-	UserID    int
-	Amount    float64
-	Currency  string
-	GatewayID int
-	CountryID int
+	UserID          int
+	Amount          float64
+	Currency        string
+	GatewayID       int
+	GatewayProvider enum.Provider
+	CountryID       int
 }
 
 type DepositResponse struct {
@@ -23,11 +24,12 @@ type UpdateStatusRequest struct {
 }
 
 type WithdrawRequest struct {
-	UserID    int
-	Amount    float64
-	Currency  string
-	GatewayID int
-	CountryID int
+	UserID          int
+	Amount          float64
+	Currency        string
+	GatewayID       int
+	GatewayProvider enum.Provider
+	CountryID       int
 }
 
 type WithdrawResponse struct {

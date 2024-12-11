@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"payment-gateway/context"
+	"payment-gateway/enum"
 	"payment-gateway/internal/api/handler/withdrawal/dto"
 	"payment-gateway/internal/models"
 	"payment-gateway/internal/services/gateway"
@@ -54,10 +55,11 @@ func (h Handler) InitWithdrawal(w http.ResponseWriter, r *http.Request) {
 
 	for _, g := range gateways {
 		txnResp, err := h.Txn.Withdraw(ctx, &txnContract.WithdrawRequest{
-			UserID:    userID,
-			GatewayID: g.ID,
-			Amount:    req.Amount,
-			Currency:  req.Currency,
+			UserID:          userID,
+			GatewayID:       g.ID,
+			GatewayProvider: enum.Provider(g.Name),
+			Amount:          req.Amount,
+			Currency:        req.Currency,
 		})
 		if err != nil {
 			log.Println("failed to perform withdrawal: ", err.Error())

@@ -5,6 +5,7 @@ import (
 	"payment-gateway/client"
 	"payment-gateway/db"
 	"payment-gateway/internal/services/transaction/contract"
+	"payment-gateway/paymentprovider"
 )
 
 type Transaction interface {
@@ -14,11 +15,13 @@ type Transaction interface {
 }
 
 type impl struct {
-	db db.DB
+	db              db.DB
+	paymentProvider paymentprovider.PaymentProvider
 }
 
 func New() Transaction {
 	return &impl{
-		db: client.Get().DB,
+		db:              client.Get().DB,
+		paymentProvider: paymentprovider.New(),
 	}
 }
