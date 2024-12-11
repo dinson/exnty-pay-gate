@@ -27,17 +27,6 @@ END $$;
 
 DO $$ 
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'gateway_countries') THEN
-        CREATE TABLE gateway_countries (
-            gateway_id INT NOT NULL, 
-            country_id INT NOT NULL,
-            PRIMARY KEY (gateway_id, country_id)
-        );
-    END IF;
-END $$;
-
-DO $$ 
-BEGIN
     IF NOT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'transactions') THEN
         CREATE TABLE transactions (
             id SERIAL PRIMARY KEY,
@@ -63,6 +52,20 @@ BEGIN
             country_id INT,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+    END IF;
+END $$;
+
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'gateway_priority') THEN
+        CREATE TABLE gateway_priority (
+           id SERIAL PRIMARY KEY,
+           gateway_id INT,
+           country_id INT,
+           priority INT,
+           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+           updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
     END IF;
 END $$;
