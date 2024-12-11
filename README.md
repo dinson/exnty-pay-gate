@@ -52,6 +52,16 @@ OpenAPI spec can be found in the directory `./docs/api.yaml`
   - Stores the configuration values including credentials and other values required in the project.
 - **client**
   - Create and store all the clients required in the project.
+- **internal / api / handler**
+  - Handle all API requests.
+  - Defines `protected` and `public` endpoints.
+  - `public` endpoints are essentially webhook callbacks from gateways.
+- **internal / middleware**
+  - Defines middleware functions.
+  - Verifies the user, extract and store user's country to request context.
+- **internal / services**
+  - Business logic for all the operations.
+  - Every package is exposed through an interface, abstracting its implementation.
 - **paymentprovider**
   - Encapsulates all 3rd party payment provider libraries, providing a unified facade interface to the outside world.
   - Extensible to add new payment provider packages without modifying the existing code.

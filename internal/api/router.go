@@ -6,7 +6,7 @@ import (
 	callbackHandler "payment-gateway/internal/api/handler/callback"
 	depositHandler "payment-gateway/internal/api/handler/deposit"
 	"payment-gateway/internal/api/handler/withdrawal"
-	"payment-gateway/internal/api/middleware"
+	"payment-gateway/internal/middleware"
 	"payment-gateway/internal/services/gateway"
 	"payment-gateway/internal/services/transaction"
 )
