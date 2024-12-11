@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"payment-gateway/enum"
 	"payment-gateway/internal/api/handler/callback/dto"
-	"payment-gateway/internal/models"
 	"payment-gateway/internal/services/transaction"
 	"payment-gateway/internal/services/transaction/contract"
 )
@@ -28,8 +27,6 @@ func (h Handler) HandleDepositSuccess(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	respStatusCode := http.StatusOK
-
 	if err = h.Txn.UpdateStatus(ctx, &contract.UpdateStatusRequest{
 		TransactionID: req.TransactionID,
 		Status:        enum.TxnStatusSuccess,
@@ -39,19 +36,7 @@ func (h Handler) HandleDepositSuccess(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(respStatusCode)
-
-	response := models.APIResponse{
-		StatusCode: respStatusCode,
-		Message:    "success",
-		Data:       nil,
-	}
-	err = json.NewEncoder(w).Encode(&response)
-	if err != nil {
-		log.Println(fmt.Sprintf("error encoding json: %v", err))
-		http.Error(w, "Error encoding JSON", http.StatusInternalServerError)
-		return
-	}
+	w.WriteHeader(http.StatusOK)
 }
 
 // HandleDepositFailure handles deposit failure callback
@@ -66,8 +51,6 @@ func (h Handler) HandleDepositFailure(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	respStatusCode := http.StatusOK
-
 	if err = h.Txn.UpdateStatus(ctx, &contract.UpdateStatusRequest{
 		TransactionID: req.TransactionID,
 		Status:        enum.TxnStatusFailed,
@@ -77,19 +60,7 @@ func (h Handler) HandleDepositFailure(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(respStatusCode)
-
-	response := models.APIResponse{
-		StatusCode: respStatusCode,
-		Message:    "success",
-		Data:       nil,
-	}
-	err = json.NewEncoder(w).Encode(&response)
-	if err != nil {
-		log.Println(fmt.Sprintf("error encoding json: %v", err))
-		http.Error(w, "Error encoding JSON", http.StatusInternalServerError)
-		return
-	}
+	w.WriteHeader(http.StatusOK)
 }
 
 // HandleWithdrawalSuccess handles withdrawal success callback
@@ -104,8 +75,6 @@ func (h Handler) HandleWithdrawalSuccess(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	respStatusCode := http.StatusOK
-
 	if err = h.Txn.UpdateStatus(ctx, &contract.UpdateStatusRequest{
 		TransactionID: req.TransactionID,
 		Status:        enum.TxnStatusSuccess,
@@ -114,20 +83,7 @@ func (h Handler) HandleWithdrawalSuccess(w http.ResponseWriter, r *http.Request)
 		http.Error(w, "something went wrong", http.StatusInternalServerError)
 		return
 	}
-
-	w.WriteHeader(respStatusCode)
-
-	response := models.APIResponse{
-		StatusCode: respStatusCode,
-		Message:    "success",
-		Data:       nil,
-	}
-	err = json.NewEncoder(w).Encode(&response)
-	if err != nil {
-		log.Println(fmt.Sprintf("error encoding json: %v", err))
-		http.Error(w, "Error encoding JSON", http.StatusInternalServerError)
-		return
-	}
+	w.WriteHeader(http.StatusOK)
 }
 
 // HandleWithdrawalFailure handles withdrawal failure callback
@@ -142,8 +98,6 @@ func (h Handler) HandleWithdrawalFailure(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	respStatusCode := http.StatusOK
-
 	if err = h.Txn.UpdateStatus(ctx, &contract.UpdateStatusRequest{
 		TransactionID: req.TransactionID,
 		Status:        enum.TxnStatusFailed,
@@ -153,17 +107,5 @@ func (h Handler) HandleWithdrawalFailure(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	w.WriteHeader(respStatusCode)
-
-	response := models.APIResponse{
-		StatusCode: respStatusCode,
-		Message:    "success",
-		Data:       nil,
-	}
-	err = json.NewEncoder(w).Encode(&response)
-	if err != nil {
-		log.Println(fmt.Sprintf("error encoding json: %v", err))
-		http.Error(w, "Error encoding JSON", http.StatusInternalServerError)
-		return
-	}
+	w.WriteHeader(http.StatusOK)
 }
