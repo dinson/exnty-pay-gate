@@ -2,6 +2,7 @@ package link
 
 import (
 	"context"
+	"log"
 	"payment-gateway/paymentprovider/contract"
 )
 
@@ -18,10 +19,12 @@ func New() Link {
 
 func (i impl) Deposit(ctx context.Context, req *contract.DepositRequest) error {
 	// TODO: implement exponential backoff
-	panic("implement me")
+	log.Println("link deposit is not implemented")
+	return nil
 }
 
 func (i impl) Withdraw(ctx context.Context, req *contract.WithdrawRequest) error {
 	// TODO: implement exponential backoff
-	panic("implement me")
+	log.Println("link withdrawal is not implemented")
+	return nil
 }
