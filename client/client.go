@@ -1,6 +1,7 @@
 package client
 
 import (
+	"log"
 	"payment-gateway/config"
 	"payment-gateway/db"
 )
@@ -22,6 +23,8 @@ func Init() {
 }
 
 func initPostgreSQLClient() {
+	log.Println("initializing postgresql client...")
+
 	dbURL := "postgres://" + config.Get().Database.Username +
 		":" + config.Get().Database.Password +
 		"@" + config.Get().Database.Host +
@@ -30,4 +33,6 @@ func initPostgreSQLClient() {
 		"?sslmode=disable"
 
 	client.DB = db.Initialize(dbURL)
+
+	log.Println("initialized postgresql client!")
 }
