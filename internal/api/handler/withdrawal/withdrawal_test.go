@@ -62,7 +62,7 @@ func TestHandler_InitWithdrawal(t *testing.T) {
 			},
 			args: args{
 				w: httptest.NewRecorder(),
-				r: httptest.NewRequest("POST", "/deposit", bytes.NewBufferString(`{"amount":100,"currency":"aed"}`)),
+				r: httptest.NewRequest("POST", "/withdrawal", bytes.NewBufferString(`{"amount":100,"currency":"aed"}`)),
 			},
 			wantStatusCode: http.StatusOK,
 		},
@@ -74,7 +74,7 @@ func TestHandler_InitWithdrawal(t *testing.T) {
 			},
 			args: args{
 				w: httptest.NewRecorder(),
-				r: httptest.NewRequest("POST", "/deposit", bytes.NewBufferString(`invalid json`)),
+				r: httptest.NewRequest("POST", "/withdrawal", bytes.NewBufferString(`invalid json`)),
 			},
 			wantStatusCode: http.StatusBadRequest,
 		},
@@ -86,7 +86,7 @@ func TestHandler_InitWithdrawal(t *testing.T) {
 			},
 			args: args{
 				w: httptest.NewRecorder(),
-				r: httptest.NewRequest("POST", "/deposit", bytes.NewBufferString(`{"amount":100,"currency":"aed"}`)),
+				r: httptest.NewRequest("POST", "/withdrawal", bytes.NewBufferString(`{"amount":100,"currency":"aed"}`)),
 			},
 			wantStatusCode: http.StatusInternalServerError,
 		},
@@ -98,7 +98,7 @@ func TestHandler_InitWithdrawal(t *testing.T) {
 			},
 			args: args{
 				w: httptest.NewRecorder(),
-				r: httptest.NewRequest("POST", "/deposit", bytes.NewBufferString(`{"amount":100,"currency":"aed"}`)),
+				r: httptest.NewRequest("POST", "/withdrawal", bytes.NewBufferString(`{"amount":100,"currency":"aed"}`)),
 			},
 			wantStatusCode: http.StatusForbidden,
 		},
@@ -110,7 +110,7 @@ func TestHandler_InitWithdrawal(t *testing.T) {
 			},
 			args: args{
 				w: httptest.NewRecorder(),
-				r: httptest.NewRequest("POST", "/deposit", bytes.NewBufferString(`{"amount":100,"currency":"aed"}`)),
+				r: httptest.NewRequest("POST", "/withdrawal", bytes.NewBufferString(`{"amount":100,"currency":"aed"}`)),
 			},
 			wantStatusCode: http.StatusInternalServerError,
 		},
@@ -122,7 +122,7 @@ func TestHandler_InitWithdrawal(t *testing.T) {
 			},
 			args: args{
 				w: httptest.NewRecorder(),
-				r: httptest.NewRequest("POST", "/deposit", bytes.NewBufferString(`{"amount":100,"currency":"aed"}`)),
+				r: httptest.NewRequest("POST", "/withdrawal", bytes.NewBufferString(`{"amount":100,"currency":"aed"}`)),
 			},
 			wantStatusCode: http.StatusInternalServerError,
 		},
