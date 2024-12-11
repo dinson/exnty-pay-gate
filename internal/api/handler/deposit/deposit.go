@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"payment-gateway/context"
+	"payment-gateway/enum"
 	"payment-gateway/internal/api/handler/deposit/dto"
 	"payment-gateway/internal/models"
 	"payment-gateway/internal/services/gateway"
@@ -55,7 +56,7 @@ func (h Handler) InitDeposit(w http.ResponseWriter, r *http.Request) {
 		txnResp, err := h.Txn.Deposit(ctx, &txnContract.DepositRequest{
 			UserID:          userID,
 			GatewayID:       g.ID,
-			GatewayProvider: g.Name,
+			GatewayProvider: enum.Provider(g.Name),
 			Amount:          req.Amount,
 			Currency:        req.Currency,
 		})
