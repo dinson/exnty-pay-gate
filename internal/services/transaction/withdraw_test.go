@@ -6,12 +6,14 @@ import (
 	"github.com/stretchr/testify/assert"
 	"payment-gateway/db/mocks"
 	"payment-gateway/internal/services/transaction/contract"
+	ppMocks "payment-gateway/paymentprovider/mocks"
 	"testing"
 )
 
 func Test_impl_Withdraw(t *testing.T) {
 	type fields struct {
-		db *mocks.DB
+		db              *mocks.DB
+		paymentProvider *ppMocks.PaymentProvider
 	}
 	type args struct {
 		ctx context.Context
@@ -27,7 +29,8 @@ func Test_impl_Withdraw(t *testing.T) {
 		{
 			name: "happy path",
 			fields: fields{
-				db: mockDBCreateTxn(true, 1, nil),
+				db:              mockDBCreateTxn(true, 1, nil),
+				paymentProvider: mockPaymentProvider(false, nil, true, nil),
 			},
 			args: args{
 				ctx: context.Background(),
@@ -46,9 +49,32 @@ func Test_impl_Withdraw(t *testing.T) {
 			wantErr: nil,
 		},
 		{
+			name: "provider error",
+			fields: fields{
+				db:              mockDBCreateTxn(false, 1, nil),
+				paymentProvider: mockPaymentProvider(false, nil, true, errors.New("failed")),
+			},
+			args: args{
+				ctx: context.Background(),
+				req: &contract.WithdrawRequest{
+					UserID:    1,
+					Amount:    100,
+					Currency:  "AED",
+					GatewayID: 1,
+					CountryID: 1,
+				},
+			},
+			want: &contract.WithdrawResponse{
+				TransactionID: 0,
+				Success:       false,
+			},
+			wantErr: nil,
+		},
+		{
 			name: "repo error",
 			fields: fields{
-				db: mockDBCreateTxn(true, 0, errors.New("failed")),
+				db:              mockDBCreateTxn(true, 0, errors.New("failed")),
+				paymentProvider: mockPaymentProvider(false, nil, true, nil),
 			},
 			args: args{
 				ctx: context.Background(),
@@ -67,12 +93,14 @@ func Test_impl_Withdraw(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			i := impl{
-				db: tt.fields.db,
+				db:              tt.fields.db,
+				paymentProvider: tt.fields.paymentProvider,
 			}
 			got, err := i.Withdraw(tt.args.ctx, tt.args.req)
 			assert.Equal(t, tt.want, got)
 			assert.Equal(t, tt.wantErr, err)
 			tt.fields.db.AssertExpectations(t)
+			tt.fields.paymentProvider.AssertExpectations(t)
 		})
 	}
 }

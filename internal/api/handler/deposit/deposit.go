@@ -53,10 +53,11 @@ func (h Handler) InitDeposit(w http.ResponseWriter, r *http.Request) {
 
 	for _, g := range gateways {
 		txnResp, err := h.Txn.Deposit(ctx, &txnContract.DepositRequest{
-			UserID:    userID,
-			GatewayID: g.ID,
-			Amount:    req.Amount,
-			Currency:  req.Currency,
+			UserID:          userID,
+			GatewayID:       g.ID,
+			GatewayProvider: g.Name,
+			Amount:          req.Amount,
+			Currency:        req.Currency,
 		})
 		if err != nil {
 			log.Println("failed to perform deposit: ", err.Error())

@@ -7,13 +7,19 @@ import (
 	"payment-gateway/db"
 	"payment-gateway/enum"
 	"payment-gateway/internal/services/transaction/contract"
+	ppContract "payment-gateway/paymentprovider/contract"
 	"time"
 )
 
 func (i impl) Deposit(ctx context.Context, req *contract.DepositRequest) (*contract.DepositResponse, error) {
-	// TODO: create gateway providers package and call here to initiate deposit
-
-	// TODO: implement exponential back-off
+	// call payment gateway provider to make deposit
+	if err := i.paymentProvider.Deposit(ctx, &ppContract.DepositRequest{}); err != nil {
+		log.Println(fmt.Sprintf("error from payment provider: %v userID: %d provider: %s", err, req.UserID, req.GatewayProvider))
+		return &contract.DepositResponse{
+			TransactionID: 0,
+			Success:       false,
+		}, nil
+	}
 
 	// save to transaction table
 	txnModel := &db.Transaction{
