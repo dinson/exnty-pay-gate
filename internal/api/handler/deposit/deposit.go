@@ -23,7 +23,6 @@ func (h Handler) InitDeposit(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	userID := context.GetUserID(ctx)
 	userCountryID := context.GetCountryID(ctx)
-
 	var req dto.InitDepositRequest
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
