@@ -1,68 +1,21 @@
 # Payment Gateway Integration Assessment
 
-This assessment evaluates your skills in implementing a robust and scalable payment gateway integration system within a trading platform. The system must accommodate multiple third-party payment gateways based on country and region, with support for configuring gateway priority, implementing failover mechanisms, and ensuring system resilience.
+This project handles deposit and withdrawal transactions using 3rd party payment gateways.
 
-You will work with a skeleton codebase that includes prebuilt functionality, which will assist you in the implementation. You are required to implement two key endpoints and also handle the callback from gateways to update the transaction status asynchronously. Your code should support different formats depending on the gateway-supported format (your code should support at least JSON and SOAP).
+### API Reference
 
-## Task Overview
+Visit https://exinity-payment-gateway.readme.io/
 
-You will implement the following endpoints:
+OpenAPI spec can be found in the directory `./docs/api.yaml`
 
-- `/deposit`: For processing deposit transactions.
-- `/withdrawal`: For processing withdrawal transactions.
-
-In addition to implementing these endpoints, you will handle callback responses from gateways asynchronously to update the transaction status.
-
-### Database
-
-The database helpers can be found under `db/db_helpers.go`, and the migration/init file is under `db/init.sql`.
-
-**Hint:** The project has Docker configured, which includes PostgreSQL, Kafka, and Redis, making it easier for you to get started. However, it's not mandatory to use these services in your solution. The decision to use them depends on the architecture you design for this task.
-
-### Helpers
-
-- **`api/router.go`**: The `/deposit` and `/withdrawal` endpoints are pre-defined using `gorilla/mux`.
-- **`db_helpers.go`**: This file contains helper functions for interacting with the database, such as CRUD operations.
-- **`db/init.sql`**: This is the SQL file used for the database migrations. It defines the schema for the `gateways`, `countries`, `transactions`, and `users` tables.
-- **`kafka/publisher.go`**: This file contains helper functions for publishing messages to Kafka.
-- **`services/data_format_services.go`**: This file contains functions to decode the request based on the data format (content type). You are required to create a similar function for encoding the response.
-- **`services/fault_tolerance.go`**: This file contains helper functions for implementing fault tolerance such as circuit breakers and retry mechanisms.
-- **`services/security.go`**: This file contains helper functions for masking and unmasking data using base64 encoding (Feel free to change the algorithm for better security).
-
-### Requirements
-
-1. **Endpoints Implementation:**
-    - Implement the `/deposit` and `/withdrawal` endpoints to process transactions.
-    - Each endpoint should accept a JSON/SOAP payload with details such as `amount`, `user_id`, `gateway_id`, `country_id`, and `currency`.
-    
-2. **Callback Handling:**
-    - Implement the logic to handle the callback from third-party gateways to update the transaction status asynchronously.
-    - The callback will include information like transaction status and should be used to update the corresponding transaction in the database.
-    
-3. **Transaction Status:**
-    - Each transaction must include a status field (e.g., "pending", "completed", "failed") which should be updated when the callback is received.
-    
-4. **Data Formats:**
-    - Your solution should support at least two data formats: JSON and SOAP. You should decode the request in the appropriate format (as defined in `services/data_format_services.go`), and you should also create a function for encoding the response.
-    
-5. **Unit Tests:**
-    - Write unit tests to cover the business logic, especially for the endpoints, transaction processing, and callback handling.
-    - Test for edge cases and failure scenarios, such as handling invalid input, network issues, and unexpected failures from the gateway.
-
-6. **Fault Tolerance:**
-    - Implement fault tolerance for your solution using the retry mechanisms and circuit breakers found in `services/fault_tolerance.go`.
-
-7. **Security:**
-    - Use the provided helper functions in `services/security.go` to mask and unmask sensitive data before publishing to Kafka or logging it.
-    
-### How to Get Started
+### Setup instructions
 
 1. **Clone the Repository:**
     Clone the repository to your local machine:
 
     ```bash
-    git clone [<repository_url>](https://gitlab.com/exinity-hiring/payment-gateways.git)
-    cd <project_directory>
+    git clone https://github.com/dinson/exnty-pay-gate
+    cd exnty-pay-gate
     ```
 
 2. **Setup Docker:**
@@ -82,28 +35,45 @@ The database helpers can be found under `db/db_helpers.go`, and the migration/in
     The migration file `db/init.sql` is already provided. Once the Docker services are up and running, the database will be initialized automatically, and the tables will be created.
 
 
-### Deliverables
+### Architecture
 
-- Implement the `/deposit` and `/withdrawal` endpoints.
-- Handle the callback from third-party gateways to update the transaction status.
-- Ensure that the solution supports multiple data formats (at least JSON and SOAP).
-- Implement fault tolerance and retry mechanisms where necessary.
-- Write unit tests to ensure the correctness and resilience of your solution.
-- Provide clear and concise documentation, including any architectural decisions or assumptions made and API documentation.
+ - The project follows "Layered" architecture, ensuring proper separation of concerns, modularity, unit-testability and maintainability.
 
-### Important Files
+### Unit testing
 
-- **`db/db_helpers.go`**: Helper functions for interacting with the database.
-- **`db/init.sql`**: SQL migration file to initialize the database.
-- **`api/router.go`**: Defines the API routes (`/deposit` and `/withdrawal`).
-- **`services/data_format_services.go`**: Functions for handling different data formats.
-- **`services/fault_tolerance.go`**: Functions for implementing fault tolerance, including retries and circuit breakers.
-- **`services/security.go`**: Helper functions for masking/unmasking sensitive data.
+ - In project root, run `go test ./...` to trigger unit testing of all packages.
+ - The project uses `github.com/stretchr/testify` package to assert test results.
+ - Uses `vektra/mockery` to generate mocks. `https://github.com/vektra/mockery`
+ - Install mockery by running `brew install mockery`
+ - Mocks for a package can be generated by running `mockery --name=Interface`
 
-### Time Limit
+### Important packages
+- **config**
+  - Stores the configuration values including credentials and other values required in the project.
+- **client**
+  - Create and store all the clients required in the project.
+- **paymentprovider**
+  - Encapsulates all 3rd party payment provider libraries, providing a unified facade interface to the outside world.
+  - Extensible to add new payment provider packages without modifying the existing code.
+- **db**
+  - Exposes interface for db package hiding the method implementations.
+- **constant**
+  - Defines all constant values required in the program.
+- **context**
+  - Defines utility functions that work around the values stored in the context.Context.
+- **enum**
+  - Defines all enumerated values used in the program.
+- **errors**
+  - Define all the errors used in the program.
+- **docs**
+  - Documentation for workflows and OpenAPI spec.
 
-You have **3 hours** to complete this task.
+## Gateway Selection and transactions
 
----
-
-Good luck and happy coding!
+- Each gateway is mapped to the available countries in the `gateway_priority` table.
+- Every row will hold the priority value for each gateway for a country.
+- During deposit or withdrawal transaction requests:
+  - User's country is retrieved in the middleware and stored in the context.
+  - When retrieving the gateways for a user's country, the DB method `ListCountryGatewaysByPriority()` will return the gateways in the ascending order of their priority.
+  - the available gateways will be invoked one after the other in the order of their priority. If any of the gateway returns successful response, the rest of the gateway list is ignored.
+  - If there are no gateways configured for the user's country, the handler will return an error.
