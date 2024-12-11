@@ -104,6 +104,7 @@ func Test_impl_UpdateStatus(t *testing.T) {
 				db: tt.fields.db,
 			}
 			assert.Equal(t, tt.wantErr, i.UpdateStatus(tt.args.ctx, tt.args.req))
+			tt.fields.db.AssertExpectations(t)
 		})
 	}
 }

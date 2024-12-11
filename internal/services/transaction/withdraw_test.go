@@ -4,14 +4,14 @@ import (
 	"context"
 	"errors"
 	"github.com/stretchr/testify/assert"
-	"payment-gateway/db"
+	"payment-gateway/db/mocks"
 	"payment-gateway/internal/services/transaction/contract"
 	"testing"
 )
 
 func Test_impl_Withdraw(t *testing.T) {
 	type fields struct {
-		db db.DB
+		db *mocks.DB
 	}
 	type args struct {
 		ctx context.Context
@@ -72,6 +72,7 @@ func Test_impl_Withdraw(t *testing.T) {
 			got, err := i.Withdraw(tt.args.ctx, tt.args.req)
 			assert.Equal(t, tt.want, got)
 			assert.Equal(t, tt.wantErr, err)
+			tt.fields.db.AssertExpectations(t)
 		})
 	}
 }

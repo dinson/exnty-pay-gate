@@ -73,6 +73,7 @@ func Test_impl_Deposit(t *testing.T) {
 			got, err := i.Deposit(tt.args.ctx, tt.args.req)
 			assert.Equal(t, tt.want, got)
 			assert.Equal(t, tt.wantErr, err)
+			tt.fields.db.AssertExpectations(t)
 		})
 	}
 }
