@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"payment-gateway/internal/services/transaction/contract"
+	"time"
 )
 
 func (i impl) UpdateStatus(ctx context.Context, req *contract.UpdateStatusRequest) error {
@@ -16,6 +17,7 @@ func (i impl) UpdateStatus(ctx context.Context, req *contract.UpdateStatusReques
 	}
 
 	txn.Status = req.Status.String()
+	txn.UpdatedAt = time.Now().UTC()
 
 	if err = i.db.UpdateTransactionByID(ctx, req.TransactionID, txn); err != nil {
 		errMsg := fmt.Errorf("failed to update txn by id: %d err: %v", req.TransactionID, err)

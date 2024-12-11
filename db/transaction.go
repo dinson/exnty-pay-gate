@@ -52,7 +52,7 @@ func (i impl) GetTransactionByID(ctx context.Context, id int) (*Transaction, err
 		if err == sql.ErrNoRows {
 			return nil, nil
 		}
-		return nil, fmt.Errorf("failed to fetch transaction with ID %s: %w", id, err)
+		return nil, fmt.Errorf("failed to fetch transaction with ID %d: %w", id, err)
 	}
 
 	return &transaction, nil
@@ -66,7 +66,7 @@ func (i impl) UpdateTransactionByID(ctx context.Context, id int, transaction *Tr
 	_, err := i.db.ExecContext(ctx, query, transaction.Amount, transaction.Type, transaction.Status,
 		transaction.GatewayID, transaction.CountryID, time.Now().UTC(), transaction.UserID, id)
 	if err != nil {
-		return fmt.Errorf("failed to update transaction with ID %s: %w", id, err)
+		return fmt.Errorf("failed to update transaction with ID %d: %w", id, err)
 	}
 
 	return nil

@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	_ "github.com/lib/pq"
 	"log"
-	"payment-gateway/internal/services"
+	"payment-gateway/utils"
 )
 
 type DB interface {
@@ -32,7 +32,7 @@ func Initialize(dbURL string) DB {
 	var db *sql.DB
 	var err error
 
-	err = services.RetryOperation(func() error {
+	err = utils.RetryOperation(func() error {
 		db, err = sql.Open("postgres", dbURL)
 		if err != nil {
 			return err
