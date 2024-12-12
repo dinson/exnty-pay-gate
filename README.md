@@ -2,6 +2,22 @@
 
 This project handles deposit and withdrawal transactions using 3rd party payment gateways.
 
+### What I have completed:
+1. Created deposit, withdrawal and webhook callback endpoints.
+2. Structured the project following layered architecture.
+3. Modified the skeleton code to expose DB methods through interfaces ensuring dependency injection.
+4. Wrote unit tests for handler and service layers.
+5. Dynamic payment gateway selection logic, based on country and priority.
+6. Skeleton for middleware for user auth and country.
+7. Created central config and client packages to manage configuration values and initializing clients.
+8. Wrote API reference following OpenAPI schema.
+
+### Things I have skipped due to time constraints:
+1. Use of kafka for handling deposit and withdrawal operations asynchronously.
+2. Redis for caching DB records and frequently accessed items.
+3. Health checks and exponential back-offs for payment gateways.
+
+
 ### API Reference
 
 Visit https://exinity-payment-gateway.readme.io/
