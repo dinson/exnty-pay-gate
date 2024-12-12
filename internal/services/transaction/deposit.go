@@ -13,7 +13,12 @@ import (
 
 func (i impl) Deposit(ctx context.Context, req *contract.DepositRequest) (*contract.DepositResponse, error) {
 	// call payment gateway provider to make deposit
-	if err := i.paymentProvider.Deposit(ctx, &ppContract.DepositRequest{}); err != nil {
+	if err := i.paymentProvider.Deposit(ctx, &ppContract.DepositRequest{
+		Email:           req.Email,
+		Amount:          req.Amount,
+		Currency:        req.Currency,
+		GatewayProvider: req.GatewayProvider,
+	}); err != nil {
 		log.Println(fmt.Sprintf("error from payment provider: %v userID: %d provider: %s", err, req.UserID, req.GatewayProvider))
 		return &contract.DepositResponse{
 			TransactionID: 0,

@@ -13,7 +13,12 @@ import (
 
 func (i impl) Withdraw(ctx context.Context, req *contract.WithdrawRequest) (*contract.WithdrawResponse, error) {
 	// call payment gateway provider to make withdrawal
-	if err := i.paymentProvider.Withdraw(ctx, &ppContract.WithdrawRequest{}); err != nil {
+	if err := i.paymentProvider.Withdraw(ctx, &ppContract.WithdrawRequest{
+		Email:           req.Email,
+		Amount:          req.Amount,
+		Currency:        req.Currency,
+		GatewayProvider: req.GatewayProvider,
+	}); err != nil {
 		log.Println(fmt.Sprintf("error from payment provider: %v userID: %d provider: %s", err, req.UserID, req.GatewayProvider))
 		return &contract.WithdrawResponse{
 			TransactionID: 0,

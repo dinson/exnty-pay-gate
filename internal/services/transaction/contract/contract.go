@@ -5,6 +5,7 @@ import (
 )
 
 type DepositRequest struct {
+	Email           string
 	UserID          int
 	Amount          float64
 	Currency        string
@@ -24,6 +25,7 @@ type UpdateStatusRequest struct {
 }
 
 type WithdrawRequest struct {
+	Email           string
 	UserID          int
 	Amount          float64
 	Currency        string
